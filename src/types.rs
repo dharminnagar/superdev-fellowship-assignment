@@ -1,19 +1,25 @@
 use serde::{Deserialize, Serialize};
-use solana_sdk::instruction::AccountMeta;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct CreateTokenRequest {
-    pub mintAuthority: String,
-    pub mint: String,
+    pub mintAuthority: Option<String>,
+    pub mint: Option<String>,
     pub decimals: u8,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct AccountMetaResponse {
+    pub pubkey: String,
+    pub is_signer: bool,
+    pub is_writable: bool,
+}
 #[derive(Serialize, Deserialize)]
 pub struct TokenData {
     pub program_id: String,
-    pub accounts: Vec<AccountMeta>,
+    pub accounts: Vec<AccountMetaResponse>,
     pub instruction_data: String
 }
+
 
 #[derive(Serialize, Deserialize)]
 pub struct TokenCreateSuccessResponse {
@@ -29,10 +35,10 @@ pub struct TokenCreateErrorResponse {
 
 #[derive(Serialize, Deserialize)]
 pub struct TokenMintRequest {
-    pub mint: String,
-    pub destination: String,
-    pub authority: String,
-    pub amount: u64
+    pub mint: Option<String>,
+    pub destination: Option<String>,
+    pub authority: Option<String>,
+    pub amount: Option<u64>
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -49,6 +55,20 @@ pub struct VerifyMsgRequest {
 }
 
 #[derive(Serialize, Deserialize)]
+pub struct VerifyMsgData {
+    pub signature: String,
+    pub pubkey: String,
+    pub message: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct VerifyMsgResponse {
+    pub success: bool,
+    pub error: Option<String>,
+    pub data: Option<VerifyMsgData>,
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct SendSOLRequest {
     pub from: String,
     pub to: String,
@@ -57,8 +77,20 @@ pub struct SendSOLRequest {
 
 #[derive(Serialize, Deserialize)]
 pub struct SendTokenRequest {
-    pub destination: String,
-    pub mint: String,
-    pub owner: String,
-    pub amount: u64,
+    pub destination: Option<String>,
+    pub mint: Option<String>,
+    pub owner: Option<String>,
+    pub amount: Option<u64>,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct SendTokenResponse {
+    pub success: bool,
+    pub data: TokenAccount
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct TokenAccount {
+    pub pubkey: String,
+    pub isSigner: bool,
 }
